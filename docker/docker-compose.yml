@@ -1,0 +1,51 @@
+version: "3.6"
+services:
+  mongo:
+    image: 'mongo'
+    volumes:
+      - data:/data/db
+    env_file:
+      - ./env/mongo.env
+    ports:
+      - "27071:27017"
+  redis:
+    image: 'redis/redis-stack'
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  tsunami:
+    build:
+      context: ../../webflux-tsunami-ecomm
+      dockerfile: ./Dockerfile
+    ports:
+      - "8088:8088"
+    depends_on: [mongo, redis, kafka]
+    environment:
+      spring.data.mongodb.uri: mongodb://fra:secret@mongo:27017
+      spring.data.mongodb.database: tsunami
+      spring.redis.host: redis
+      spring.kafka.bootstrap-servers: kafka:29092
+      gateway-ip: 172.18.0.1
+
+volumes:
+  data:

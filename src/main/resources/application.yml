@@ -1,0 +1,18 @@
+spring:
+  jackson:
+    default-property-inclusion: non_null
+  data:
+    mongodb:
+      uri: mongodb://fra:secret@localhost:27071
+      database: tsunami
+  kafka:
+    bootstrap-servers: localhost:29092
+
+gateway-ip: 0:0:0:0:0:0:0:1
+
+server:
+  port: 8088
+
+logging:
+  level:
+    web: debug
