@@ -18,8 +18,8 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
 
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
-        if (ex instanceof TsunamiException) {
-            exchange.getResponse().setStatusCode(((TsunamiException) ex).getStatusCode());
+        if (ex instanceof CustomException) {
+            exchange.getResponse().setStatusCode(((CustomException) ex).getStatusCode());
             return writeErrorMessage(exchange, ex.getMessage());
         }
 

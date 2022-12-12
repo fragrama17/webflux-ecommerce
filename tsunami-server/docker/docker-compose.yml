@@ -35,7 +35,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
   tsunami:
     build:
-      context: ../../webflux-tsunami-ecomm
+      context: ../../tsunami-server
       dockerfile: ./Dockerfile
     ports:
       - "8088:8088"

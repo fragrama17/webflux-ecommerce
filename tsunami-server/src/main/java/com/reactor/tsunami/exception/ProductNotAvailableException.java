@@ -2,14 +2,14 @@ package com.reactor.tsunami.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class DTOValidationException extends CustomException {
+public class ProductNotAvailableException extends CustomException {
 
-    public DTOValidationException(String message) {
+    public ProductNotAvailableException(String message) {
         super(message);
     }
 
     @Override
     public HttpStatus getStatusCode() {
-        return HttpStatus.UNPROCESSABLE_ENTITY;
+        return HttpStatus.BAD_REQUEST;
     }
 }

@@ -2,7 +2,7 @@ package com.reactor.tsunami.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class ProductNotFoundException extends RuntimeException implements TsunamiException{
+public class ProductNotFoundException extends CustomException {
 
     public ProductNotFoundException(String message) {
         super(message);

@@ -1,5 +1,6 @@
 package com.reactor.tsunami.service;
 
+import com.reactor.tsunami.exception.ProductNotAvailableException;
 import com.reactor.tsunami.model.domain.Item;
 import com.reactor.tsunami.model.domain.Order;
 import com.reactor.tsunami.model.domain.OrderDTO;
@@ -27,7 +28,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     public Mono<Page<Order>> getPagedOrders(String userId, Integer page, Integer pageSize) {
-        AtomicLong size = new AtomicLong();
+        final var size = new AtomicLong();
         final var currentPage = page;
 
         return orderRepository.count()
@@ -42,7 +43,7 @@ public class OrderService {
         var productsPriceMap = new HashMap<String, BigDecimal>();
 
         return userRepository.findById(userId)
-                .switchIfEmpty(Mono.error(() -> new RuntimeException("user-id not found for this order")))
+                .switchIfEmpty(Mono.error(() -> new RuntimeException("user-id not found, cannot create order")))
                 .thenMany(productRepository.findAllById(
                         orderDTO.getItems()
                                 .stream()
@@ -60,7 +61,7 @@ public class OrderService {
 
                     var newAvailability = product.getAvailability() - itemsMap.get(product.getId()).getQuantity();
                     if (newAvailability < 0)
-                        throw new RuntimeException("order not valid, quantity is greater then availability");
+                        throw new ProductNotAvailableException("order not valid, quantity is greater then availability");
 
                     product.setTimeStampUpdate(LocalDateTime.now());
                     product.setAvailability(newAvailability);

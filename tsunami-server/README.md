@@ -1,11 +1,13 @@
 # webflux-ecommerce
 scalable ecommerce proof of concept using spring reactor in a multi-container environment
 
->how to run the application on windows (**docker, mvn and java must be installed first !**) :
+>how to run the application on windows (**docker, mvn and java must be installed first !**)
 >
-> open the powershell
->> webflux-ecommerce> cd .\docker\
->> webflux-ecommerce> .\start.cmd
+> open the powershell at your_directory/webflux-ecommerce/docker>
+```
+.\start.cmd
+```
+
 
 - _the GET/products endpoint doesn't need authentication_
 - _if you want to add a product, first you need to create an admin user on mongoDB 
