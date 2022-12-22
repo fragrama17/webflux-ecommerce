@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
@@ -39,7 +40,7 @@ public class AuthController {
                 .log();
     }
 
-    @PostMapping(path = "/refresh-token", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/refresh-token", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<TokenHash> refreshToken(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token, @RequestHeader String user) {
         return token.equals(tokenStore.getTokenByUserId(user)) ?
                 Mono.just(tokenStore.updateTokenByUserId(user)) : Mono.error(() -> new UnauthorizedException("token is not valid"));
